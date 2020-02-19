@@ -4,6 +4,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ *  测试方法
+ * @author Administrator
+ *
+ */
 public class ReentrantLockTest2 {
 	
     private static final Lock lock = new ReentrantLock(true);
