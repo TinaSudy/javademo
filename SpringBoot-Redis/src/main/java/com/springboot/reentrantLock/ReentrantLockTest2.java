@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  */
 public class ReentrantLockTest2 {
-	
+	//创建公平锁
     private static final Lock lock = new ReentrantLock(true);
     
     public static void main(String[] args) {
