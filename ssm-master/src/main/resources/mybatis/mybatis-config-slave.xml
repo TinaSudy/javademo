@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="Book"  type="com.soecode.lyf.entity.Book"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="com/soecode/lyf/mybatis/slave/BookMapper.xml" />
+    </mappers>
+</configuration>

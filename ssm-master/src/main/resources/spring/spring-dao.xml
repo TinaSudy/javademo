@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	
+	
+	
+	<!-- 配置整合mybatis过程 -->
+	<!-- 1.配置数据库相关参数properties的属性：${url} -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	
+
+	<bean id="dataSource_students" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${students.jdbc.url}"/>
+        <property name="username" value="${students.jdbc.username}"/>
+        <property name="password" value="${students.jdbc.password}"/>
+        <property name="initialSize" value="${jdbc.initialSize}"/>
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+        <property name="maxIdle" value="${jdbc.maxIdle}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+	</bean>
+	<bean id="dataSource_boot" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${springboot.jdbc.url}"/>
+        <property name="username" value="${springboot.jdbc.username}"/>
+        <property name="password" value="${springboot.jdbc.password}"/>
+        <property name="initialSize" value="${jdbc.initialSize}"/>
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+        <property name="maxIdle" value="${jdbc.maxIdle}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+	</bean>
+	
+	<bean id="dataSource" class="com.soecode.lyf.dataSource.DynamicDataSource"><!--注意： 这里写选择数据源的类地址 下面跟着给出-->
+        <property name="defaultTargetDataSource" ref="dataSource_students"/><!-- 设置默认为此mySqlDataSource数据源-->
+        <property name="targetDataSources">
+            <map>
+                <entry key="dataSource_students" value-ref="dataSource_students"/>
+                <entry key="dataSource_boot" value-ref="dataSource_boot"/>
+            </map>
+        </property>
+    </bean>
+
+	<!-- 3.配置SqlSessionFactory对象 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 注入数据库连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 配置MyBaties全局配置文件:mybatis-config.xml -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 扫描entity包 使用别名 -->
+		<!-- <property name="typeAliasesPackage" value="com.soecode.lyf.entity" /> -->
+		<!-- 扫描sql配置文件:mapper需要的xml文件 -->
+		<!-- <property name="mapperLocations" value="classpath:mapper/*.xml" /> -->
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       <!-- 给出需要扫描Dao接口包 -->
+		<property name="basePackage" value="com.soecode.lyf.mybatis.*" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+    
+    <!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 注入数据库连接池 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 配置基于注解的声明式事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <bean id="changeDBInterceptor" class="com.soecode.lyf.dataSource.ChangDBInterceptor"/>
+    <!-- 配置AOP切面，所有service作为切点，执行changeDBInterceptor类中的changeDB方法 -->
+  	 <aop:config proxy-target-class="true">
+        <aop:pointcut id="txPointcut" expression="execution(* com.soecode.lyf.mybatis..*Dao.*(..))" />
+        <aop:aspect ref="changeDBInterceptor" order="1">
+            <aop:around pointcut-ref="txPointcut" method="changeDB"/>
+        </aop:aspect>
+    </aop:config> 
+    
+</beans>

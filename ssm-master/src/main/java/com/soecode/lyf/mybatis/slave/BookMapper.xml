@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soecode.lyf.mybatis.slave.BookDao">
+
+    <insert id="insertBook" parameterType="com.soecode.lyf.entity.Book" >
+    insert into book (book_id, name)
+    values (#{bookId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+  </insert>
+  
+</mapper>
