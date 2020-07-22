@@ -12,7 +12,7 @@ public class BigDataDispose  {
 	public void run() {
 		String url = "jdbc:mysql://192.168.10.48:3306/master?useUnicode=true&amp;characterEncoding=utf-8";
         String driver = "com.mysql.jdbc.Driver";
-        String userName = "root";
+        String userName = "root"; 
         String password = "root";
 
         java.sql.Connection conn = null;

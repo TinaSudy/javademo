@@ -210,6 +210,7 @@
     	<artifactId>atomikos</artifactId>
     	<version>1.2</version>
 	</dependency>
+	
 		
 		<!-- csv -->
 		<dependency>
@@ -218,6 +219,22 @@
 			<version>2.0</version>
 		</dependency>
 		
+		<!-- 定时任务 -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context-support</artifactId>
+	    <version>4.2.4.RELEASE</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.quartz-scheduler</groupId>
+	    <artifactId>quartz</artifactId>
+	    <version>2.2.1</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.quartz-scheduler</groupId>
+	    <artifactId>quartz-jobs</artifactId>
+	    <version>2.2.1</version>
+	</dependency>
 
 		<!-- Map工具类 -->
 		<dependency>

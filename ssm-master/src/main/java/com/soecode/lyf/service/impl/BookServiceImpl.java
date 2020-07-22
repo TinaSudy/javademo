@@ -29,6 +29,9 @@ public class BookServiceImpl implements BookService {
 	@Autowired 
 	UserDao userDao;
 
+	/**
+	 * 添加@Transactional 数据源可以自动切换
+	 */
 	public Book getById() {
 		
 		//获取用户信息
@@ -40,6 +43,9 @@ public class BookServiceImpl implements BookService {
 		
 		return null;
 	}
+	/**
+	 * 添加  @Transactional 后分库 数据可以回滚
+	 */
 	@Transactional(value="springTransactionManager",rollbackFor=Exception.class)
 	public void update() {
 		
